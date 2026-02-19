@@ -300,8 +300,31 @@
 									"listen": "prerequest",
 									"script": {
 										"id": "e8be5f8f-be33-44ab-957b-5060988f2539",
-										"exec": [],
-										"type": "text/javascript"
+										"exec": [
+											"pm.sendRequest({",
+											"    url: pm.environment.get(\"BaseURI\") + \"/v1/contacts/\",",
+											"    method: \"GET\",",
+											"    header: { \"Authorization\": pm.environment.get(\"token\") }",
+											"}, function(err, res) {",
+											"    if(err) {",
+											"        console.log(\"Error while requesting contacts: \", err);",
+											"    } else {",
+											"        let data = res.json();",
+											"        if(data.contacts && data.contacts.length>0) {",
+											"            let contactId = data.contacts[0].id;",
+											"            pm.environment.set(\"id\", contactId);",
+											"            console.log(\"Contact was added: \",contactId);",
+											"        } else {",
+											"            console.warn(\"Contacts are missing in the response\");",
+											"        }",
+											"    }",
+											"}",
+											"",
+											")"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
 									}
 								}
 							],
